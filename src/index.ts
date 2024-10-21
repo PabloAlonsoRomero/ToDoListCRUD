@@ -96,8 +96,20 @@ app.delete("/todos/:id", async (req: Request, res: Response) => {
 
         await tarea.destroy();
         res.json({ message: "Tarea eliminada"});
-    } catch (error) {}
+    } catch (error) {
+        res.status(500).json({ message: "Error al eliminar la tarea", error});
+    }
 })
+
+// Middleware para manejar errores
+app.use((err: any, req: Request, res: Response, next: Function) => {
+    console.error(err.stack);
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({
+        message: err.message || "Error en el servidor",
+        error: process.env.NODE_ENV === "development" ? err : {} // Muestra más a detalle solo en desarrollo
+    });
+});
 
 app.listen(3000, () => {
     console.log("Aplicacion ejecutandose en el puerto 3000")

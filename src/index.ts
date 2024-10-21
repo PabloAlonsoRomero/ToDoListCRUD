@@ -80,6 +80,25 @@ app.put("/todos/:id", async (req: Request, res: Response) => {
     }
 })
 
+// Eliminar una tarea por su ID
+app.delete("/todos/:id", async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params;
+
+        if (isNaN(Number(id))) {
+            throw { status: 400, message: "El ID debe ser un número válido"};
+        }
+
+        const tarea = await Tarea.findByPk(id);
+        if (!tarea) {
+            throw { status: 404, message: "Tarea no encontrada"};
+        }
+
+        await tarea.destroy();
+        res.json({ message: "Tarea eliminada"});
+    } catch (error) {}
+})
+
 app.listen(3000, () => {
     console.log("Aplicacion ejecutandose en el puerto 3000")
 })

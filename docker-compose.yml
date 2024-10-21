@@ -10,7 +10,7 @@ services:
       - mysql_todolist:/var/lib/mysql
     
   todoListCRUD:
-    image: todolistcrud:latest
+    image: pabloalonso24/todolistcrud:latest
     container_name: todolistcrud_container
     ports:
       - "3000:3000"

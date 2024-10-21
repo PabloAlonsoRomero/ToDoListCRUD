@@ -16,7 +16,10 @@ jobs:
               run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
 
             - name: Build Docker Image
-              run: docker build -t pabloalonso24/todolistcrud:${{ github.sha }} pabloalonso24/todolistcrud:latest
+              run: docker build -t pabloalonso24/todolistcrud:${{ github.sha }} .
+
+            - name: Tag Latest
+              run: docker tag pabloalonso24/todolistcrud:${{ github.sha }} pabloalonso24/todolistcrud:latest
 
             - name: Push Docker Image
               run: |

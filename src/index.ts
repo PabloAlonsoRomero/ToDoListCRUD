@@ -56,6 +56,30 @@ app.post("/todos", async (req: Request, res: Response) => {
     }
 })
 
+// Actualizar una tarea por su ID
+app.put("/todos/:id", async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params;
+        const {title, description, completed} = req.body;
+        if (isNaN(Number(id))) {
+            throw { status: 400, message: "El ID debe ser un número valido"};
+        }
+
+        const tarea = await Tarea.findByPk(id);
+        if (!tarea) {
+            throw { status: 404, message: "Tarea no encontrada"};
+        }
+
+        if (title !== undefined) tarea.title = title;
+        if (description !== undefined) tarea.description = description;
+        if (completed !== undefined) tarea.completed = completed;
+        await tarea.save();
+        res.json(tarea);
+    } catch (error) {
+        res.status(500).json({ message: "Error al actualizar la tarea", error})
+    }
+})
+
 app.listen(3000, () => {
     console.log("Aplicacion ejecutandose en el puerto 3000")
 })
